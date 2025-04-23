@@ -7,7 +7,7 @@ var tuoi = document.getElementById("year").value;
 var gioiTinh = document.getElementById("gioiTinh").value;
 var gioiTinhCal = gioiTinh == "nam"?"Nam": "Nữ";
 
-function tinhToan(
+function tinhToan()(
   alert("Tên: "+ ten + ", Tuổi: " + tuoi + ", Giới tính: " + gioiTinhCal );
 )
 
