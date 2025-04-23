@@ -3,11 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <title>Trang Web Đầu Tiên</title>
+  <style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
 </head>
 <body>
   <h1>Xin chào!</h1>
   <p>Đây là website đầu tiên của tôi.</p>
   <button onclick="sayHello()">Bấm vào tôi!</button>
+
+  <h2>HTML Table</h2>
+
+<table>
+  <tr>
+    <th>Tên</th>
+    <th>Năm Sinh</th>
+    <th>Giới Tính</th>
+  </tr>
+  <tr>
+    <td><input type="text" id="name" name="fname"></td>
+    <td><input type="text" id="year" name="fname"></td>
+    <td>
+      <input type="radio" id="nam" name="nam" value="nam">
+        <label for="Nam</label><br>
+        <input type="radio" id="nu" name="nu" value="nu">
+        <label for="nu">Nữ</label><br>  
+    </td>
+  </tr>
+  <tr>
+    <td><button onclick="Cal()">Tìm</button></td>
+    <td></td>
+    <td></td>
+  </tr>
+ 
+</table>
 
   <script src="script.js"></script>
 </body>
