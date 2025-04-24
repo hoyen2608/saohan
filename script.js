@@ -4,25 +4,24 @@ function tinhToan() {
    var ten = document.getElementById("name").value;
    var namSinh = document.getElementById("year").value;
    var x = document.getElementById("nam").checked;
-   var gioiTinhCal = x == true ? "Nam" : "Nữ";
+   var gioiTinhCal = x == true ? "Nam": "Nữ";
 
    const d = new Date();
    let year = d.getFullYear();
    var tinhTuoi = year - namSinh + 1;
+   var saohan = getSaoVaHan(namSinh, gioiTinhCal);
+   var sao = saohan.sao, han = saohan.han;
 
    var jsonChild = {
       "Ten": ten,
       "GioiTinh": gioiTinhCal,
       "Tuoi": tinhTuoi,
-      "NamAmLich": getCanChi(namSinh),
-      "Sao": getSaoChieuMenh(namSinh, gioiTinhCal),
-      "Han": getSaoVaHan(namSinh, gioiTinhCal)
+      "NamAmLich": getCanChi(namSinh),      
+      "Sao": sao,
+      "Han": han
    };
-
    console.log(jsonChild);
-
    arrSaoHan.push(jsonChild);
-
    addRow(jsonChild);
 }
 
@@ -80,47 +79,6 @@ function getCanChi(year) {
    return `${can[canIndex]} ${chi[chiIndex]}`;
 }
 
-function getSaoChieuMenh(yearOfBirth, gender) {
-   const saoNam = [
-      "La Hầu", // 0
-      "Thổ Tú", // 1
-      "Thủy Diệu", // 2
-      "Thái Bạch", // 3
-      "Thái Dương", // 4
-      "Vân Hớn", // 5
-      "Kế Đô", // 6
-      "Thái Âm", // 7
-      "Mộc Đức" // 8
-   ];
-
-   const saoNu = [
-      "Kế Đô", // 0
-      "Vân Hớn", // 1
-      "Mộc Đức", // 2
-      "Thái Âm", // 3
-      "Thái Bạch", // 4
-      "Thủy Diệu", // 5
-      "La Hầu", // 6
-      "Thổ Tú", // 7
-      "Thái Dương" // 8
-   ];
-
-   const cycleIndex = yearOfBirth % 9;
-
-   if (gender.toLowerCase() === "nam") {
-      return saoNam[cycleIndex];
-   } else if (gender.toLowerCase() === "nữ") {
-      return saoNu[cycleIndex];
-   } else {
-      return "Giới tính không hợp lệ (nam/nữ)";
-   }
-}
-
-// Ví dụ sử dụng:
-const namSinh = 1996;
-const gioiTinh = "nam";
-console.log(`Năm ${namSinh} (${gioiTinh}) chiếu mệnh bởi sao: ${getSaoChieuMenh(namSinh, gioiTinh)}`);
-
 
 function getSaoVaHan(yearOfBirth, gender) {
    const saoNam = [
@@ -149,12 +107,6 @@ function getSaoVaHan(yearOfBirth, gender) {
    const index = yearOfBirth % 9;
    const sao = (gender.toLowerCase() === "nam") ? saoNam[index] : saoNu[index];
    const han = hanTheoSao[sao];
-
-   return han;
-   //return "Sao: " + sao + ", Han: " + han;
-   // return {
-   //   saoChieuMenh: sao,
-   //   nienHan: han,
-   //   message: `Sao chiếu mệnh: ${sao} → Niên hạn: ${han}`
-   // };
+   var data = {sao: sao, han: han};
+   return data;
 }
