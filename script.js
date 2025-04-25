@@ -4,20 +4,39 @@ var stt = 1;
 function tinhToan() {
     var ten = document.getElementById("name").value;
     var namSinh = document.getElementById("year").value;
-    var x = document.getElementById("nam").checked;
-    var gioiTinhCal = x == true ? "Nam" : "Nữ";
+    var tuoi = document.getElementById("tuoi").value;
+    calculateAge();
+    calculateBirthYear();
+    var xGioiTinh = document.getElementById("nam").checked;
+    var gioiTinhCal = xGioiTinh == true ? "Nam" : "Nữ";
 
     const d = new Date();
     let year = d.getFullYear();
-    var tinhTuoi = year - namSinh + 1;
-    var saohan = getSaoVaHan(namSinh, gioiTinhCal);
-    var sao = saohan.sao,
-        han = saohan.han;
+    var tinhTuoi = year - namSinh;
+
+    if (!ten) {
+        alert("Vuil lòng nhập tên!");
+        return;
+    }
+
+    if (namSinh) {
+        tinhTuoi = year - namSinh + 1;
+    } else if (tuoi) {
+        namSinh = Number.parseInt(year) - Number.parseInt(tuoi) + 1;
+        tinhTuoi = tuoi;
+    } else {
+        alert("Vui lòng nhập Năm Sinh hoặc Tuổi!");
+    }
+
+    var sao = getSao((tinhTuoi - 1), gioiTinhCal),
+        han = getHan(namSinh, xGioiTinh, year).han;
+
 
     var jsonChild = {
         "STT": stt,
         "Ten": ten,
         "GioiTinh": gioiTinhCal,
+        "NamSinh": namSinh,
         "Tuoi": tinhTuoi,
         "NamAmLich": getCanChi(namSinh),
         "Sao": sao,
@@ -31,6 +50,13 @@ function tinhToan() {
     addRow(jsonChild);
     stt = stt + 1;
     sortTable();
+    calculateAge();
+    calculateBirthYear();
+
+    //set null text
+    document.getElementById('name').value = '';
+    document.getElementById('year').value = '';
+    document.getElementById('tuoi').value = '';
 }
 
 function addRow(child) {
@@ -51,20 +77,27 @@ function addRow(child) {
     const cell5 = row.insertCell(4);
     const cell6 = row.insertCell(5);
     const cell7 = row.insertCell(6);
+    const cell8 = row.insertCell(7);
 
     cell1.textContent = person.STT;
     cell2.textContent = person.Ten;
     cell3.textContent = person.GioiTinh;
-    cell4.textContent = person.Tuoi;
-    cell5.textContent = person.NamAmLich;
-    cell6.textContent = person.Sao;
-    cell7.textContent = person.Han;
+    cell4.textContent = person.NamAmLich;
+    cell5.textContent = person.NamSinh;
+    cell6.textContent = person.Tuoi;
+    cell7.textContent = person.Sao;
+    cell8.textContent = person.Han;
 
 }
 
-function exportExcel() {
-    console.log(arrSaoHan);
+function deleteRow(button) {
+    // Lấy hàng (tr) chứa nút "Xóa"
+    var row = button.closest("tr");
+
+    // Xóa hàng khỏi bảng
+    row.remove();
 }
+
 
 function exportToExcel() {
 
@@ -76,7 +109,7 @@ function exportToExcel() {
     XLSX.utils.book_append_sheet(workbook, worksheet, "DanhSach");
 
     // Xuất file
-    XLSX.writeFile(workbook, "danh_sach.xlsx");
+    XLSX.writeFile(workbook, "saohan.xlsx");
 }
 
 function getCanChi(year) {
@@ -91,38 +124,34 @@ function getCanChi(year) {
 }
 
 
-function getSaoVaHan(yearOfBirth, gender) {
+function getSao(tuoi, gioitinh) {
     const saoNam = [
-        "La Hầu", "Thổ Tú", "Thủy Diệu",
-        "Thái Bạch", "Thái Dương", "Vân Hớn",
-        "Kế Đô", "Thái Âm", "Mộc Đức"
+        "La Hầu",
+        "Thổ Tú",
+        "Thủy Diệu",
+        "Thái Bạch",
+        "Thái Dương",
+        "Vân Hớn",
+        "Kế Đô",
+        "Thái Âm",
+        "Mộc Đức"
     ];
     const saoNu = [
-        "Kế Đô", "Vân Hớn", "Mộc Đức",
-        "Thái Âm", "Thái Bạch", "Thủy Diệu",
-        "La Hầu", "Thổ Tú", "Thái Dương"
+        "Kế Đô",
+        "Vân Hớn",
+        "Mộc Đức",
+        "Thái Âm",
+        "Thổ Tú",
+        "La Hầu",
+        "Thái Dương",
+        "Thái Bạch",
+        "Thủy Diệu"
     ];
 
-    const hanTheoSao = {
-        "La Hầu": "Hạn Tam Kheo",
-        "Thổ Tú": "Hạn Ngũ Mộ",
-        "Thủy Diệu": "Hạn Hàm Ếch",
-        "Thái Bạch": "Hạn Thiên Tinh",
-        "Thái Dương": "Hạn Tán Tận",
-        "Vân Hớn": "Hạn Thiên La",
-        "Kế Đô": "Hạn Địa Võng",
-        "Thái Âm": "Hạn Huỳnh Tuyền",
-        "Mộc Đức": "Hạn Ngũ Mộ"
-    };
+    const index = tuoi % 9;
+    const sao = (gioitinh.toLowerCase() === "nam") ? saoNam[index] : saoNu[index];
 
-    const index = yearOfBirth % 9;
-    const sao = (gender.toLowerCase() === "nam") ? saoNam[index] : saoNu[index];
-    const han = hanTheoSao[sao];
-    var data = {
-        sao: sao,
-        han: han
-    };
-    return data;
+    return sao;
 }
 
 function sortTable() {
@@ -158,4 +187,51 @@ function sortTable() {
             switching = true;
         }
     }
+}
+
+const hanTheoTuoi = {
+    "nam": {
+        "Huỳnh Tiễn": [10, 18, 27, 36, 45, 54, 63, 72, 81],
+        "Tam Kheo": [11, 19, 20, 28, 37, 46, 55, 64, 73, 82],
+        "Ngũ Mộ": [12, 21, 29, 30, 38, 47, 56, 65, 74, 83],
+        "Thiên Tinh": [13, 22, 31, 39, 40, 48, 57, 66, 75, 84],
+        "Tán Tận": [14, 23, 32, 41, 49, 50, 58, 67, 76, 85],
+        "Thiên La": [15, 24, 33, 42, 51, 59, 60, 68, 77, 86],
+        "Địa Võng": [16, 25, 34, 43, 52, 61, 69, 70, 78, 87],
+        "Diêm Vương": [17, 26, 35, 44, 53, 62, 71, 79, 80, 88]
+    },
+    "nu": {
+        "Tán Tận": [10, 18, 27, 36, 45, 54, 63, 72, 81],
+        "Thiên Tinh": [11, 19, 20, 28, 37, 46, 55, 64, 73, 82],
+        "Ngũ Mộ": [12, 21, 29, 30, 38, 47, 56, 65, 74, 83],
+        "Tam Kheo": [13, 22, 31, 39, 40, 48, 57, 66, 75, 84],
+        "Huỳnh Tiễn": [14, 23, 32, 41, 49, 50, 58, 67, 76, 85],
+        "Diêm Vương": [15, 24, 33, 42, 51, 59, 60, 68, 77, 86],
+        "Địa Võng": [16, 25, 34, 43, 52, 61, 69, 70, 78, 87],
+        "Thiên La": [17, 26, 35, 44, 53, 62, 71, 79, 80, 88]
+    }
+};
+
+/**
+ * Trả về tên hạn dựa trên tuổi âm lịch và giới tính
+ * @param {number} birthYear - Năm sinh (âm lịch hoặc dương lịch nếu tính tuổi)
+ * @param {string} gender - 'nam' hoặc 'nu'
+ * @param {number} targetYear - Năm cần tra hạn
+ */
+function getHan(birthYear, gender, targetYear) {
+    const tuoiAm = targetYear - birthYear + 1;
+    const hanList = hanTheoTuoi[gender == true ? "nam" : "nu"];
+    let han = "Cầu An";
+
+    for (let [tenHan, tuoiList] of Object.entries(hanList)) {
+        if (tuoiList.includes(tuoiAm)) {
+            han = tenHan;
+            break;
+        }
+    }
+
+    return {
+        tuoiAm,
+        han
+    };
 }
