@@ -3,6 +3,7 @@ var stt = 1;
 
 function tinhToan() {
     var ten = document.getElementById("name").value;
+    ten = titleCase(ten);
     var namSinh = document.getElementById("year").value;
     var tuoi = document.getElementById("tuoi").value;
     
@@ -231,4 +232,11 @@ function getHan(birthYear, gender, targetYear) {
         tuoiAm,
         han
     };
+}
+
+function titleCase(s) {
+    return s.toLowerCase()
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
 }
