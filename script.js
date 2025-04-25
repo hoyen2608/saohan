@@ -5,8 +5,7 @@ function tinhToan() {
     var ten = document.getElementById("name").value;
     var namSinh = document.getElementById("year").value;
     var tuoi = document.getElementById("tuoi").value;
-    calculateAge();
-    calculateBirthYear();
+    
     var xGioiTinh = document.getElementById("nam").checked;
     var gioiTinhCal = xGioiTinh == true ? "Nam" : "Nữ";
 
@@ -50,8 +49,6 @@ function tinhToan() {
     addRow(jsonChild);
     stt = stt + 1;
     sortTable();
-    calculateAge();
-    calculateBirthYear();
 
     //set null text
     document.getElementById('name').value = '';
