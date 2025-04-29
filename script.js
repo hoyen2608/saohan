@@ -57,6 +57,24 @@ function tinhToan() {
     document.getElementById('tuoi').value = '';
 }
 
+function getTuoi(){
+    namSinh = document.getElementById("year").value;
+    if(namSinh)
+    {
+        tuoi = new Date().getFullYear() - namSinh + 1;
+        document.querySelector('#tuoi').value = tuoi;
+    }
+}
+
+function getNam(){
+    tuoi = document.getElementById("tuoi").value;
+    if(tuoi)
+    {
+        namSinh = new Date().getFullYear() - tuoi + 1;
+        document.querySelector('#year').value = namSinh;
+    }
+}
+
 function addRow(child) {
     // Object dữ liệu mới
     const person = child;
