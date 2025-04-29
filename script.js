@@ -26,6 +26,7 @@ function tinhToan() {
         tinhTuoi = tuoi;
     } else {
         alert("Vui lòng nhập Năm Sinh hoặc Tuổi!");
+        return;
     }
 
     var sao = getSao((tinhTuoi - 1), gioiTinhCal),
